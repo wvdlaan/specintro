@@ -1,0 +1,7 @@
+target/
+resources/public/js/
+.lein-*
+.nrepl-port
+*.iml
+*.js
+*.log
