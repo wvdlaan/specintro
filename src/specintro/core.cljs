@@ -22,12 +22,11 @@ standard clojure(script) functions.
 
 ## Including clojure.spec in your project
 
-As usual, clojure.spec is just a library. So, you start by adding a dependency for
-`[org.clojure/clojure \"1.9.0-alpha5\"]` to your project.
+Add a dependency for `[org.clojure/clojure \"1.9.0-alpha5\"]` to your project.
 
 You can, optionally, also add a dependency for `[org.clojure/test.check \"0.9.0\"]`
 if you want to use clojure.spec to generate test-data.
-I think that, at this point in time, test.check only works for Clojure, not Clojurescript.
+AFAIK test.check only works for Clojure, not Clojurescript.
 
 Within your namespace you require clojure.spec with
 
@@ -86,6 +85,10 @@ Within your namespace you require clojure.spec with
   (parse (s/cat :cat1 integer? :cat2 keyword?) [42 :foo]))
 
 (defcard
+  "In Clojure you can use `s/unform` to convert a *conformed value*
+back to a *data value*. AFAIK this doesn't work in Clojurescript.")
+
+(defcard
   "
 # Any function with 1 argument is a predicate
 
@@ -131,12 +134,14 @@ For example;
 ```"
   (parse ::int :foo))
 
-(s/def ::ints (s/or :or1 integer? :or2 (s/* ::ints)))
+(s/def ::ints (s/or :or1 integer?
+                    :or2 (s/* ::ints)))
 
 (defcard
   "
 ```
-(s/def ::ints (s/or :or1 integer? :or2 (s/* ::ints)))
+(s/def ::ints (s/or :or1 integer?
+                    :or2 (s/* ::ints)))
 (parse ::ints [42 [43 44] 45])
 ```"
   (parse ::ints [42 [43 44] 45]))
@@ -270,7 +275,11 @@ Some examples ...")
          [:foo 42 43 :baz]))
 
 (defcard
-  "`s/&` version 2: check the two integers
+  "`s/&` version 2: check the two integers with
+an additional predicate
+
+The *conformed value* produced by `(s/cat :cat1 integer? :cat2 integer?)`
+is the input of predicate `#(> (:cat1 %) (:cat2 %))`.
 ```
 (parse (s/cat :cat1 keyword?
               :cat2 (s/& (s/cat :cat1 integer?
