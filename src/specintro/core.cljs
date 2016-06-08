@@ -22,10 +22,12 @@ standard clojure(script) functions.
 
 ## Including clojure.spec in your project
 
-As usual, it is just a library. So, you add a dependency for
-`[org.clojure/clojure \"1.9.0-alpha5\"]`.
+As usual, clojure.spec is just a library. So, you start by adding a dependency for
+`[org.clojure/clojure \"1.9.0-alpha5\"]` to your project.
+
 You can, optionally, also add a dependency for `[org.clojure/test.check \"0.9.0\"]`
 if you want to use clojure.spec to generate test-data.
+I think that, at this point in time, test.check only works for Clojure, not Clojurescript.
 
 Within your namespace you require clojure.spec with
 
@@ -151,8 +153,8 @@ For example;
 * `s/*` match 0 or more items
 * `s/+` match 1 or more items
 * `s/?` match 0 or 1 item
-* `s/alt` match one of the predicates on 0 or more items
-* `s/cat` match a sequence of predicates in fixed order on 0 or more items
+* `s/alt` match one of the predicates on 1 or more items
+* `s/cat` match a sequence of predicates in fixed order on 1 or more items
 * `s/&` match the first arg on 0 or more items
         thread the resulting *conformed value* through the other args
         so they can invalidate or change the *conformed value*
@@ -174,10 +176,12 @@ Some examples ...")
   "integer? is true, but, #(< 5 %) is not
 ```
 (parse (s/and integer?
-              #(< 5 %)) 3)
+              #(< 5 %))
+       3)
 ```"
   (parse (s/and integer?
-                #(< 5 %)) 3))
+                #(< 5 %))
+         3))
 
 (defcard
   "`s/*` returns a vector while `s/cat` returns a map
@@ -197,7 +201,7 @@ Some examples ...")
               :cat2 (s/? (s/keys)
               :cat3 (s/* integer?)
               :cat4 keyword?)
-       [:foo 42 43 :baz])
+       [:foo {} 42 43 :baz])
 ```"
   (parse (s/cat :cat1 (s/+ keyword?)
                 :cat2 (s/? (s/keys))
@@ -212,7 +216,7 @@ Some examples ...")
               :cat2 (s/? (s/keys)
               :cat3 (s/spec (s/* integer?))
               :cat4 keyword?)
-       [:foo [42 43] :baz])
+       [:foo {} [42 43] :baz])
 ```"
   (parse (s/cat :cat1 (s/+ keyword?)
                 :cat2 (s/? (s/keys))
@@ -251,11 +255,45 @@ Some examples ...")
                       :children (s/* string?)))
 
 (defcard
-  "Let's make a simple spec for html
+  "`s/&` version 1: match two integers with `s/cat`
+```
+(parse (s/cat :cat1 keyword?
+              :cat2 (s/cat :cat1 integer?
+                           :cat2 integer?)
+              :cat3 keyword?)
+       [:foo 42 43 :baz])
+```"
+  (parse (s/cat :cat1 keyword?
+                :cat2 (s/cat :cat1 integer?
+                             :cat2 integer?)
+                :cat3 keyword?)
+         [:foo 42 43 :baz]))
+
+(defcard
+  "`s/&` version 2: check the two integers
+```
+(parse (s/cat :cat1 keyword?
+              :cat2 (s/& (s/cat :cat1 integer?
+                                :cat2 integer?)
+                         #(> (:cat1 %) (:cat2 %)))
+              :cat3 keyword?)
+       [:foo 42 43 :baz])
+```"
+  (parse (s/cat :cat1 keyword?
+                :cat2 (s/& (s/cat :cat1 integer?
+                                  :cat2 integer?)
+                           #(> (:cat1 %) (:cat2 %)))
+                :cat3 keyword?)
+         [:foo 42 43 :baz]))
+
+(defcard
+  "# Let's make a simple spec for html
+
+html version 1: the basic structure
 ```
 (s/def ::html1 (s/cat :tag keyword?
-                     :options (s/keys)
-                     :children (s/* string?)))
+                      :options (s/keys)
+                      :children (s/* string?)))
 
 (parse ::html1 [:div {:class \"foo\"} \"baz\" \"bar\"])
 ```"
@@ -267,7 +305,7 @@ Some examples ...")
                                            :html ::html2))))
 
 (defcard
-  "Version 2: options are optional and children are recursive
+  "html version 2: options are optional and children are recursive
 ```
 (s/def ::html2 (s/cat :tag keyword?
                       :options (s/? (s/keys))
@@ -284,7 +322,7 @@ Some examples ...")
 
 Because we need namespaced keywords for `s/keys`.
 
-The classic way to destructure a map:
+The classic way to destructure a hashmap:
 ```
 (let [{:keys [b]} {:b 1}] b)
 ```
