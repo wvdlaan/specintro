@@ -203,7 +203,7 @@ Some examples ...")
   "`s/+` returns a vector while `s/?` returns a conformed value
 ```
 (parse (s/cat :cat1 (s/+ keyword?)
-              :cat2 (s/? (s/keys)
+              :cat2 (s/? (s/keys))
               :cat3 (s/* integer?)
               :cat4 keyword?)
        [:foo {} 42 43 :baz])
