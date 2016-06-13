@@ -37,7 +37,7 @@ Within your namespace you require clojure.spec with
 ## Some features
 
 1. Define pre/post conditions with `s/fdef`
-2. Enable/disable pre/post conditions with `s/instrument`, `s/uninstrument`
+2. Enable/disable pre/post conditions with `s/instrument`, `s/unstrument`
 3. Generate test-data with `s/gen`, `s/exercise` (using test.check)
 4. Works for functions and macros")
 
@@ -121,7 +121,7 @@ For example;
 # clojure.spec provides a global registry of reusable specs
 
 * you automatically inherit the specs of libraries
-* enable/disable imported specs with; `s/instrument`, `s/uninstrument`
+* enable/disable imported specs with; `s/instrument`, `s/unstrument`
 * allows you to define recursive data structures
 * only works for namespaced keywords, ie; you have to
   use namespaced keywords in your hashmaps to get the full
@@ -203,7 +203,7 @@ Some examples ...")
   "`s/+` returns a vector while `s/?` returns a conformed value
 ```
 (parse (s/cat :cat1 (s/+ keyword?)
-              :cat2 (s/? (s/keys)
+              :cat2 (s/? (s/keys))
               :cat3 (s/* integer?)
               :cat4 keyword?)
        [:foo {} 42 43 :baz])
