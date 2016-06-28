@@ -6,8 +6,8 @@
 
   :min-lein-version "2.5.3"
   
-  :dependencies [[org.clojure/clojure "1.9.0-alpha5"]
-                 [org.clojure/clojurescript "1.9.36"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha7"]
+                 [org.clojure/clojurescript "1.9.89"]
                  [devcards "0.2.1-7"]
                  [sablono "0.7.2"]
                  
@@ -18,7 +18,7 @@
                  [cljsjs/react-dom-server "15.1.0-0"]
                  ]
 
-  :plugins [[lein-figwheel "0.5.4-SNAPSHOT"]
+  :plugins [[lein-figwheel "0.5.4-5"]
             [lein-cljsbuild "1.1.3" :exclusions [org.clojure/clojure]]]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"

@@ -80,13 +80,20 @@ Within your namespace you require clojure.spec with
     (s/conform spec data-value)
     (s/explain-data spec data-value)))
 
-(parse (s/cat :cat1 integer? :cat2 keyword?) [42 :foo])
+(parse (s/cat :cat1 integer? :cat2 keyword?)
+       [42 :foo])
 ```"
-  (parse (s/cat :cat1 integer? :cat2 keyword?) [42 :foo]))
+  (parse (s/cat :cat1 integer? :cat2 keyword?)
+         [42 :foo]))
 
 (defcard
-  "In Clojure you can use `s/unform` to convert a *conformed value*
-back to a *data value*. AFAIK this doesn't work in Clojurescript.")
+  "`s/unform` will convert a *conformed value* back to a *data value*
+```
+(s/unform (s/cat :cat1 integer? :cat2 keyword?)
+          {:cat1 42 :cat2 :foo})
+```"
+  (s/unform (s/cat :cat1 integer? :cat2 keyword?)
+            {:cat1 42 :cat2 :foo}))
 
 (defcard
   "
@@ -355,7 +362,19 @@ Fortunately, it is possible to use an alias:
 
 (let [{:keys [::space/kw]}] kw)
 ```
-")
+
+And more options are coming;
+```
+(ns whatever
+  (:require [path.to.name.space :as space]))
+
+(let [{::space/keys [kw]}] kw)
+(let [{:a/keys [b]} {:a/b 1}] b)
+```
+For details see:
+
+* [CLJ-1910](http://dev.clojure.org/jira/browse/CLJ-1910)
+* [CLJ-1919](http://dev.clojure.org/jira/browse/CLJ-1919)")
 
 (defcard
   "
@@ -397,10 +416,23 @@ Fortunately, it is possible to use an alias:
   (parse (s/keys) {::start 3 ::end :foo}))
 
 (defcard
-  "And you can list the required keys
+  "Add a list of required keys
 ```
 (parse (s/keys :req [::start ::end])
        {::start 3})
 ```"
   (parse (s/keys :req [::start ::end])
          {::start 3}))
+
+(defcard
+  "And add additional predicates with `s/and`
+```
+(parse (s/and (s/keys :req [::start ::end])
+              #(let [{:keys [::start ::end]} %]
+                 (< start end)))
+       {::start 3 ::end 2})
+```"
+  (parse (s/and (s/keys :req [::start ::end])
+                #(let [{:keys [::start ::end]} %]
+                   (< start end)))
+         {::start 3 ::end 2}))
