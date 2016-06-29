@@ -352,7 +352,7 @@ Destructuring namespaced keywords:
 
 This gets clumsy for long paths:
 ```
-(let [{:keys [:path.to.name.space/kw]}] kw)
+(let [{:keys [:path.to.name.space/kw]} {:path.to.name.space/kw 42}] kw)
 ```
 
 Fortunately, it is possible to use an alias:
@@ -360,15 +360,15 @@ Fortunately, it is possible to use an alias:
 (ns whatever
   (:require [path.to.name.space :as space]))
 
-(let [{:keys [::space/kw]}] kw)
+(let [{:keys [::space/kw]} {::space/kw 42}] kw)
 ```
 
-And more options are coming;
+And more options are coming in 1.9.0 which allow you to put the namespace in front of `keys` like this:
 ```
 (ns whatever
   (:require [path.to.name.space :as space]))
 
-(let [{::space/keys [kw]}] kw)
+(let [{::space/keys [kw]} {::space/kw 42}] kw)
 (let [{:a/keys [b]} {:a/b 1}] b)
 ```
 For details see:
