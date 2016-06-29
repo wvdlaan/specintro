@@ -22,7 +22,7 @@ standard clojure(script) functions.
 
 ## Including clojure.spec in your project
 
-Add a dependency for `[org.clojure/clojure \"1.9.0-alpha5\"]` to your project.
+Add a dependency for `[org.clojure/clojure \"1.9.0-alpha8\"]` to your project.
 
 You can, optionally, also add a dependency for `[org.clojure/test.check \"0.9.0\"]`
 if you want to use clojure.spec to generate test-data.
@@ -99,7 +99,7 @@ Within your namespace you require clojure.spec with
   "
 # Any function with 1 argument is a predicate
 
-from the 1.9.0-alpha5 release notes:
+from the 1.9.0 release notes:
 New predicates in core (all also now have built-in generator support in spec):
 
 * seqable?
