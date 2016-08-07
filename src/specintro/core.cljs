@@ -1,9 +1,12 @@
 (ns specintro.core
   (:require
    [cljs.spec :as s]
+   [devcards.core :as dc]
    [sablono.core :as sab :include-macros true])
   (:require-macros
-   [devcards.core :as dc :refer [defcard deftest]]))
+   [devcards.core :refer [defcard deftest]]))
+
+(devcards.core/start-devcard-ui!)
 
 (enable-console-print!)
 
@@ -22,7 +25,7 @@ standard clojure(script) functions.
 
 ## Including clojure.spec in your project
 
-Add a dependency for `[org.clojure/clojure \"1.9.0-alpha8\"]` to your project.
+Add a dependency for `[org.clojure/clojure \"1.9.0-alpha10\"]` to your project.
 
 You can, optionally, also add a dependency for `[org.clojure/test.check \"0.9.0\"]`
 if you want to use clojure.spec to generate test-data.
