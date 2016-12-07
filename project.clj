@@ -6,20 +6,21 @@
 
   :min-lein-version "2.5.3"
   
-  :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
-                 [org.clojure/clojurescript "1.9.89"]
-                 [devcards "0.2.1-7"]
-                 [sablono "0.7.3"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
+                 [org.clojure/clojurescript "1.9.293"]
+                 [org.clojure/test.check "0.9.0"]
+                 [devcards "0.2.2"]
+                 [sablono "0.7.6"]
                  
                  ;; need to specify this for sablono
                  ;; when not using devcards
-                 [cljsjs/react "15.3.0-0"]
-                 [cljsjs/react-dom "15.3.0-0"]
-                 [cljsjs/react-dom-server "15.3.0-0"]
+                 [cljsjs/react "15.4.0-0"]
+                 [cljsjs/react-dom "15.4.0-0"]
+                 [cljsjs/react-dom-server "15.4.0-0"]
                  ]
 
-  :plugins [[lein-figwheel "0.5.4-7"]
-            [lein-cljsbuild "1.1.3" :exclusions [org.clojure/clojure]]]
+  :plugins [[lein-figwheel "0.5.8"]
+            [lein-cljsbuild "1.1.5" :exclusions [org.clojure/clojure]]]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"
                                     "target"]

@@ -1,6 +1,8 @@
 (ns specintro.core
   (:require
    [cljs.spec :as s]
+   [cljs.spec.impl.gen :as gen]
+   [clojure.test.check :as tc]
    [devcards.core :as dc]
    [sablono.core :as sab :include-macros true])
   (:require-macros
@@ -21,15 +23,12 @@ standard clojure(script) functions.
 ## Online documentation
 
 * [Official guide](http://clojure.org/guides/spec)
-* [API](https://clojure.github.io/clojure/branch-master/clojure.spec-api.html#clojure.spec)
+* [Clojure API](https://clojure.github.io/clojure/branch-master/clojure.spec-api.html#clojure.spec)
+* [Clojurescript API](https://cljs.github.io/api/cljs.spec/)
 
 ## Including clojure.spec in your project
 
-Add a dependency for `[org.clojure/clojure \"1.9.0-alpha10\"]` to your project.
-
-You can, optionally, also add a dependency for `[org.clojure/test.check \"0.9.0\"]`
-if you want to use clojure.spec to generate test-data.
-AFAIK test.check only works for Clojure, not Clojurescript.
+Add a dependency for `[org.clojure/clojure \"1.9.0-alpha14\"]` to your project.
 
 Within your namespace you require clojure.spec with
 
@@ -41,7 +40,7 @@ Within your namespace you require clojure.spec with
 
 1. Define pre/post conditions with `s/fdef`
 2. Enable/disable pre/post conditions with `s/instrument`, `s/unstrument`
-3. Generate test-data with `s/gen`, `s/exercise` (using test.check)
+3. Generate test-data with `s/gen`, `s/exercise` (see last two devcards)
 4. Works for functions and macros")
 
 (defcard
@@ -439,3 +438,38 @@ For details see:
                 #(let [{:keys [::start ::end]} %]
                    (< start end)))
          {::start 3 ::end 2}))
+
+(defcard
+  "
+# Generators
+
+To generate data you have to add a dependency for `[org.clojure/test.check \"0.9.0\"]`.
+For Clojurescript you also need to require `[clojure.test.check :as tc]` from a namespace, eg;
+```
+(ns specintro.core
+  (:require
+   [cljs.spec :as s]
+   [cljs.spec.impl.gen :as gen]
+   [clojure.test.check :as tc]))
+
+(gen/generate (s/gen int?))
+```
+"
+  (gen/generate (s/gen int?)))
+
+(defcard
+  "
+# Exercise
+
+`s/exercise` returns pairs of generated and conformed values for a spec.
+```
+(s/exercise (s/and (s/keys :req [::start ::end])
+                     #(let [{:keys [::start ::end]} %]
+                        (< start end)))
+            3)
+```
+"
+  (s/exercise (s/and (s/keys :req [::start ::end])
+                     #(let [{:keys [::start ::end]} %]
+                        (< start end)))
+              3))
